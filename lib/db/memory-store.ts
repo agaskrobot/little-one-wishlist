@@ -31,6 +31,13 @@ export const memoryStore: KVStore = {
   async set(key, value, exatSeconds) {
     getMap().set(key, { value, expiresAtMs: exatSeconds * 1000 });
   },
+  async setNX(key, value, exatSeconds) {
+    const map = getMap();
+    const existing = map.get(key);
+    if (existing && existing.expiresAtMs > Date.now()) return false;
+    map.set(key, { value, expiresAtMs: exatSeconds * 1000 });
+    return true;
+  },
   async del(...keys) {
     const map = getMap();
     for (const key of keys) map.delete(key);

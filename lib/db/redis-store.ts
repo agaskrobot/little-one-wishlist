@@ -20,6 +20,13 @@ function createRestStore(url: string, token: string): KVStore {
     async set(key, value, exatSeconds) {
       await redis.set(key, value, { exat: exatSeconds });
     },
+    async setNX(key, value, exatSeconds) {
+      const result = await redis.set(key, value, {
+        exat: exatSeconds,
+        nx: true,
+      });
+      return result === "OK";
+    },
     async del(...keys) {
       if (keys.length === 0) return;
       await redis.del(...keys);
@@ -53,6 +60,14 @@ function createTcpStore(url: string): KVStore {
         expiration: { type: "EXAT", value: exatSeconds },
       });
     },
+    async setNX(key, value, exatSeconds) {
+      const client = await getClient();
+      const result = await client.set(key, JSON.stringify(value), {
+        expiration: { type: "EXAT", value: exatSeconds },
+        condition: "NX",
+      });
+      return result === "OK";
+    },
     async del(...keys) {
       if (keys.length === 0) return;
       const client = await getClient();
@@ -66,6 +81,9 @@ const noopStore: KVStore = {
     return null;
   },
   async set() {},
+  async setNX() {
+    return true;
+  },
   async del() {},
 };
 

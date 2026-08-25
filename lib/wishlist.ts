@@ -95,10 +95,6 @@ export async function createOrFindWishlist(
   input: CreateWishlistInput
 ): Promise<CreateWishlistResult> {
   const email = normalizeEmail(input.email);
-  const existing = await findActiveWishlistByEmail(email);
-  if (existing) {
-    return { status: "exists", wishlist: existing };
-  }
 
   const now = new Date();
   const wishlist: Wishlist = {
@@ -113,6 +109,21 @@ export async function createOrFindWishlist(
     expiresAt: new Date(now.getTime() + SIX_MONTHS_MS).toISOString(),
     items: [],
   };
+  const exat = exatSeconds(wishlist.expiresAt);
+
+  // Atomically claim the email slot first so two concurrent submissions for
+  // the same address can't both create a wishlist — the loser here always
+  // reads back the winner's wishlist instead.
+  const claimed = await kv.setNX(keys.email(email), wishlist.id, exat);
+  if (!claimed) {
+    const existing = await findActiveWishlistByEmail(email);
+    if (existing) {
+      return { status: "exists", wishlist: existing };
+    }
+    // The email slot pointed at a wishlist that no longer exists (e.g. a
+    // partially-failed write). Reclaim it rather than leaving it stuck.
+    await kv.set(keys.email(email), wishlist.id, exat);
+  }
 
   await persist(wishlist);
   return { status: "created", wishlist };
