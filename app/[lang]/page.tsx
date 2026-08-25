@@ -1,6 +1,7 @@
 import { hasLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { SignupForm } from "@/components/landing/signup-form";
+import { RecoverForm } from "@/components/landing/recover-form";
 import { IconGift, IconLink, IconShare, IconHeart } from "@/components/icons";
 import { notFound } from "next/navigation";
 
@@ -48,7 +49,10 @@ export default async function LandingPage({
             </a>
           </div>
 
-          <SignupForm lang={lang} dict={dict} />
+          <div>
+            <SignupForm lang={lang} dict={dict} />
+            <RecoverForm dict={dict} />
+          </div>
         </div>
       </section>
 

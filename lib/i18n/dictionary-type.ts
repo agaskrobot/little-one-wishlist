@@ -65,6 +65,28 @@ export interface Dictionary {
       title: string;
       items: { q: string; a: string }[];
     };
+    recover: {
+      toggle: string;
+      title: string;
+      subtitle: string;
+      emailLabel: string;
+      emailPlaceholder: string;
+      submit: string;
+      submitting: string;
+      cancel: string;
+      foundTitle: string;
+      foundBody: string;
+      linkLabel: string;
+      copyButton: string;
+      copiedButton: string;
+      goToList: string;
+      tryAnother: string;
+      notFoundBody: string;
+      errors: {
+        email: string;
+        generic: string;
+      };
+    };
     footer: string;
   };
   edit: {

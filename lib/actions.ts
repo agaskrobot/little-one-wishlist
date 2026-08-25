@@ -5,6 +5,7 @@ import {
   addItemToWishlist,
   cancelReservation as cancelReservationDal,
   createOrFindWishlist,
+  findActiveWishlistByEmail,
   removeItemFromWishlist,
   reserveItem as reserveItemDal,
   setItemPurchased,
@@ -78,6 +79,47 @@ export async function createWishlistAction(
     };
   } catch (error) {
     console.error("[little-one-wishlist] createWishlistAction failed:", error);
+    return { status: "error", errors: { generic: "generic" } };
+  }
+}
+
+export interface RecoverWishlistState {
+  status: "idle" | "error" | "found" | "not_found";
+  errors?: {
+    email?: string;
+    generic?: string;
+  };
+  editUrl?: string;
+  email?: string;
+}
+
+export async function recoverWishlistAction(
+  _prevState: RecoverWishlistState,
+  formData: FormData
+): Promise<RecoverWishlistState> {
+  const email = String(formData.get("email") ?? "");
+  const honeypot = String(formData.get("company") ?? "");
+
+  if (honeypot.trim().length > 0) {
+    return { status: "idle" };
+  }
+
+  if (!isValidEmail(email)) {
+    return { status: "error", errors: { email: "invalid" } };
+  }
+
+  try {
+    const wishlist = await findActiveWishlistByEmail(email);
+    if (!wishlist) {
+      return { status: "not_found", email };
+    }
+
+    const baseUrl = await getBaseUrl();
+    const editUrl = `${baseUrl}/${wishlist.locale}/edit/${wishlist.editToken}`;
+
+    return { status: "found", editUrl, email: wishlist.email };
+  } catch (error) {
+    console.error("[little-one-wishlist] recoverWishlistAction failed:", error);
     return { status: "error", errors: { generic: "generic" } };
   }
 }

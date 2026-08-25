@@ -64,7 +64,12 @@ function SignupFormInner({
           })}
         </p>
         {state.editUrl && (
-          <CopyLinkBox url={state.editUrl} dict={dict} />
+          <CopyLinkBox
+            url={state.editUrl}
+            label={success.linkLabel}
+            copyLabel={success.copyButton}
+            copiedLabel={success.copiedButton}
+          />
         )}
         <div className="mt-6 flex flex-col items-center gap-3">
           {state.editUrl && (
@@ -189,9 +194,18 @@ function SignupFormInner({
   );
 }
 
-function CopyLinkBox({ url, dict }: { url: string; dict: Dictionary }) {
+export function CopyLinkBox({
+  url,
+  label,
+  copyLabel,
+  copiedLabel,
+}: {
+  url: string;
+  label: string;
+  copyLabel: string;
+  copiedLabel: string;
+}) {
   const [copied, setCopied] = useState(false);
-  const success = dict.landing.success;
 
   async function handleCopy() {
     try {
@@ -206,7 +220,7 @@ function CopyLinkBox({ url, dict }: { url: string; dict: Dictionary }) {
   return (
     <div className="mt-4">
       <p className="text-center text-xs font-medium uppercase tracking-wide text-ink-300">
-        {success.linkLabel}
+        {label}
       </p>
       <div className="mt-1.5 flex items-center gap-2 rounded-xl border border-blush-100 bg-cream/60 px-3 py-2">
         <span className="flex-1 truncate text-xs text-ink-500">{url}</span>
@@ -220,7 +234,7 @@ function CopyLinkBox({ url, dict }: { url: string; dict: Dictionary }) {
           ) : (
             <IconCopy className="h-3.5 w-3.5" />
           )}
-          {copied ? success.copiedButton : success.copyButton}
+          {copied ? copiedLabel : copyLabel}
         </button>
       </div>
     </div>

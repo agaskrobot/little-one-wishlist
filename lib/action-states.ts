@@ -2,6 +2,7 @@ import type {
   CreateWishlistState,
   AddItemState,
   ReserveItemState,
+  RecoverWishlistState,
 } from "./actions";
 
 export const initialCreateWishlistState: CreateWishlistState = {
@@ -11,3 +12,7 @@ export const initialCreateWishlistState: CreateWishlistState = {
 export const initialAddItemState: AddItemState = { status: "idle" };
 
 export const initialReserveItemState: ReserveItemState = { status: "idle" };
+
+export const initialRecoverWishlistState: RecoverWishlistState = {
+  status: "idle",
+};
