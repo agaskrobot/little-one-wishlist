@@ -1,52 +1,53 @@
-# Little One — wishlist dla noworodka
+# Little One — newborn wishlist
 
-Aplikacja do tworzenia listy życzeń dla dziecka: rodzic zostawia e-mail i imię
-dziecka i od razu dostaje unikalny link edycyjny na ekranie, dodaje do niego
-prezenty (linki do produktów) i udostępnia znajomym link/kod QR do
-rezerwowania prezentów bez podwójnych zakupów. Dostępna po polsku, angielsku
-i hiszpańsku.
+An app for building a baby wishlist: a parent leaves an email and the baby's
+name and immediately gets a unique edit link on screen, adds gifts to it
+(product links) and shares a link/QR code with friends for reserving gifts
+without duplicate purchases. Available in Polish, English, and Spanish.
 
-## Jak to jest zbudowane
+## How it's built
 
-- **Next.js 16 (App Router)** — routing zlokalizowany pod `app/[lang]/...`
-  (`pl` / `en` / `es`), wykrywanie języka i przekierowania w `proxy.ts`.
-- **Dane** — `lib/wishlist.ts` (warstwa dostępu do danych) nad prostym
-  key-value store (`lib/db`). W produkcji używa Upstash Redis / Vercel KV;
-  bez skonfigurowanych zmiennych środowiskowych automatycznie przełącza się
-  na magazyn w pamięci (wygodne do lokalnego developmentu, **nietrwałe**).
-  Listy wygasają po 6 miesiącach dzięki natywnemu TTL Redisa — nie ma
-  potrzeby żadnego cron joba do sprzątania.
-- **E-mail nie jest wysyłany** — po podaniu adresu e-mail i imienia dziecka
-  unikalny link edycyjny pokazuje się od razu na ekranie (z przyciskiem
-  kopiowania). Adres e-mail służy wyłącznie do wymuszenia reguły „jedna
-  aktywna lista na e-mail" — jeśli lista już istnieje, aplikacja pokazuje
-  link do niej zamiast tworzyć nową.
-- **Mutacje** — Server Actions w `lib/actions.ts` (dodawanie/usuwanie
-  przedmiotów, rezerwacje, tworzenie listy).
-- **QR kod** — generowany po stronie serwera pakietem `qrcode` na stronie
-  panelu edycyjnego.
+- **Next.js 16 (App Router)** — localized routing under `app/[lang]/...`
+  (`pl` / `en` / `es`), language detection and redirects in `proxy.ts`.
+- **Data** — `lib/wishlist.ts` (data access layer) on top of a simple
+  key-value store (`lib/db`). In production it uses Upstash Redis / Vercel
+  Redis; without configured environment variables it automatically falls
+  back to an in-memory store (convenient for local development,
+  **non-persistent**). Lists expire after 6 months via Redis' native TTL —
+  no cron job needed for cleanup.
+- **No email is sent** — after entering an email and the baby's name, the
+  unique edit link is shown immediately on screen (with a copy button). The
+  email address is only used to enforce a "one active list per email" rule —
+  if a list already exists, the app shows the link to it instead of creating
+  a new one.
+- **Mutations** — Server Actions in `lib/actions.ts` (adding/removing items,
+  reservations, list creation).
+- **QR code** — generated server-side with the `qrcode` package on the edit
+  panel page.
 
-## Rozwój lokalny
+## Local development
 
 ```bash
 npm install
 npm run dev
 ```
 
-Otwórz [http://localhost:3000](http://localhost:3000) — przekieruje do
-`/pl` (lub innego języka wykrytego z `Accept-Language`).
+Open [http://localhost:3000](http://localhost:3000) — it redirects to `/pl`
+(or another language detected from `Accept-Language`).
 
-Skopiuj `.env.example` do `.env.local`, jeśli chcesz podłączyć trwałe
-przechowywanie danych (Upstash Redis). Bez tego appka działa w pełni
-lokalnie z magazynem w pamięci.
+Copy `.env.example` to `.env.local` if you want to connect persistent
+storage (Upstash Redis). Without it the app runs fully locally with the
+in-memory store.
 
-## Deploy na Vercel
+## Deploying to Vercel
 
-1. Podłącz repo do Vercel.
-2. Dodaj zmienne środowiskowe z `.env.example`:
-   - `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` — trwałe dane
-     (np. przez integrację Vercel Marketplace → Upstash, albo własną bazę
-     Upstash Redis).
-3. Deploy — bez kroku 2 appka wystartuje, ale dane znikną przy każdym
-   restarcie instancji serverless, więc jest to wymagane przed realnym
-   użyciem.
+1. Connect the repo to Vercel.
+2. Add persistent storage:
+   - Easiest: create a **Redis** database from the project's **Storage** tab
+     in the Vercel dashboard (powered by Upstash) and connect it — this
+     auto-injects `KV_REST_API_URL` / `KV_REST_API_TOKEN`, which the app
+     already supports.
+   - Alternatively, set `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`
+     manually from your own Upstash database.
+3. Deploy — without step 2 the app will still start, but data disappears on
+   every serverless instance restart, so it's required before real use.
