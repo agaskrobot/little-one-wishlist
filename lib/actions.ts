@@ -8,6 +8,7 @@ import {
   findActiveWishlistByEmail,
   removeItemFromWishlist,
   reserveItem as reserveItemDal,
+  setItemPrivate,
   setItemPurchased,
 } from "./wishlist";
 import { getBaseUrl } from "./url";
@@ -211,6 +212,19 @@ export async function setItemPurchasedAction(
 ): Promise<{ ok: boolean }> {
   if (!editToken || !itemId) return { ok: false };
   const wishlist = await setItemPurchased(editToken, itemId, purchased);
+  if (!wishlist) return { ok: false };
+  if (pathname) revalidatePath(pathname);
+  return { ok: true };
+}
+
+export async function setItemPrivateAction(
+  editToken: string,
+  itemId: string,
+  isPrivate: boolean,
+  pathname: string
+): Promise<{ ok: boolean }> {
+  if (!editToken || !itemId) return { ok: false };
+  const wishlist = await setItemPrivate(editToken, itemId, isPrivate);
   if (!wishlist) return { ok: false };
   if (pathname) revalidatePath(pathname);
   return { ok: true };

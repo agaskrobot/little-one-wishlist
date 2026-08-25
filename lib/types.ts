@@ -14,6 +14,7 @@ export interface WishlistItem {
   addedAt: string;
   reservation: Reservation | null;
   purchasedAt: string | null;
+  isPrivate: boolean;
 }
 
 export interface Wishlist {

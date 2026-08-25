@@ -133,8 +133,11 @@ export interface Dictionary {
       reservedBy: string;
       notReserved: string;
       purchasedBadge: string;
+      privateBadge: string;
       markPurchasedButton: string;
       undoPurchaseButton: string;
+      makePrivateButton: string;
+      makePublicButton: string;
       removeButton: string;
       removeConfirmTitle: string;
       removeConfirmBody: string;
@@ -145,6 +148,7 @@ export interface Dictionary {
         available: string;
         reserved: string;
         purchased: string;
+        private: string;
       };
     };
     editLinkWarning: string;

@@ -191,8 +191,11 @@ const pl: Dictionary = {
       reservedBy: "Zarezerwowane",
       notReserved: "Dostępne",
       purchasedBadge: "Kupione",
+      privateBadge: "Widoczne tylko dla Ciebie",
       markPurchasedButton: "Oznacz jako kupione",
       undoPurchaseButton: "Cofnij zakup",
+      makePrivateButton: "Widoczne tylko dla mnie",
+      makePublicButton: "Pokaż na wspólnej liście",
       removeButton: "Usuń",
       removeConfirmTitle: "Usunąć ten przedmiot?",
       removeConfirmBody:
@@ -205,6 +208,7 @@ const pl: Dictionary = {
         available: "Dostępne ({count})",
         reserved: "Zarezerwowane ({count})",
         purchased: "Kupione ({count})",
+        private: "Widoczne tylko dla Ciebie ({count})",
       },
     },
     editLinkWarning:

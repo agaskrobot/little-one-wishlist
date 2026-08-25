@@ -50,7 +50,7 @@ function toPublic(wishlist: Wishlist): PublicWishlist {
     shareToken,
     createdAt,
     expiresAt,
-    items,
+    items: items.filter((item) => !item.isPrivate),
   };
 }
 
@@ -154,6 +154,7 @@ export async function addItemToWishlist(
     addedAt: new Date().toISOString(),
     reservation: null,
     purchasedAt: null,
+    isPrivate: false,
   };
 
   wishlist.items.push(item);
@@ -202,7 +203,7 @@ export async function reserveItem(
   if (!wishlist) return { ok: false, reason: "not_found" };
 
   const item = wishlist.items.find((entry) => entry.id === itemId);
-  if (!item) return { ok: false, reason: "not_found" };
+  if (!item || item.isPrivate) return { ok: false, reason: "not_found" };
   if (item.reservation || item.purchasedAt) {
     return { ok: false, reason: "already_reserved" };
   }
@@ -226,6 +227,22 @@ export async function setItemPurchased(
   if (!item) return null;
 
   item.purchasedAt = purchased ? new Date().toISOString() : null;
+  await persist(wishlist);
+  return wishlist;
+}
+
+export async function setItemPrivate(
+  editToken: string,
+  itemId: string,
+  isPrivate: boolean
+): Promise<Wishlist | null> {
+  const wishlist = await getWishlistByEditToken(editToken);
+  if (!wishlist) return null;
+
+  const item = wishlist.items.find((entry) => entry.id === itemId);
+  if (!item) return null;
+
+  item.isPrivate = isPrivate;
   await persist(wishlist);
   return wishlist;
 }

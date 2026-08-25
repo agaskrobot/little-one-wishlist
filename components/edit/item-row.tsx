@@ -5,6 +5,7 @@ import {
   removeItemAction,
   cancelReservationAction,
   setItemPurchasedAction,
+  setItemPrivateAction,
 } from "@/lib/actions";
 import { ConfirmModal } from "@/components/ui/confirm-modal";
 import {
@@ -13,6 +14,8 @@ import {
   IconExternal,
   IconCheck,
   IconHeart,
+  IconEye,
+  IconEyeOff,
 } from "@/components/icons";
 import type { WishlistItem } from "@/lib/types";
 import type { Dictionary } from "@/lib/i18n/dictionary-type";
@@ -54,6 +57,12 @@ export function ItemRow({
     });
   }
 
+  function handleTogglePrivate() {
+    startTransition(async () => {
+      await setItemPrivateAction(editToken, item.id, !item.isPrivate, pathname);
+    });
+  }
+
   return (
     <li className="flex flex-col gap-4 rounded-2xl bg-white p-4 shadow-softer ring-1 ring-blush-100">
       <div className="flex min-w-0 items-center gap-3">
@@ -90,7 +99,7 @@ export function ItemRow({
           {item.note && (
             <div className="mt-1 text-xs italic text-ink-400">{item.note}</div>
           )}
-          <div className="mt-2">
+          <div className="mt-2 flex flex-wrap items-center gap-1.5">
             {item.purchasedAt ? (
               <span className="inline-flex items-center gap-1.5 rounded-full bg-ink-300/30 px-2.5 py-1 text-xs font-medium text-ink-700">
                 <IconCheck className="h-3.5 w-3.5" />
@@ -104,6 +113,12 @@ export function ItemRow({
             ) : (
               <span className="inline-flex items-center gap-1.5 rounded-full bg-sage-100 px-2.5 py-1 text-xs font-medium text-sage-500">
                 {items.notReserved}
+              </span>
+            )}
+            {item.isPrivate && (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-ink-300/20 px-2.5 py-1 text-xs font-medium text-ink-500">
+                <IconEyeOff className="h-3.5 w-3.5" />
+                {items.privateBadge}
               </span>
             )}
           </div>
@@ -127,6 +142,23 @@ export function ItemRow({
             <IconCheck className="h-3.5 w-3.5" />
           )}
           {item.purchasedAt ? items.undoPurchaseButton : items.markPurchasedButton}
+        </button>
+        <button
+          type="button"
+          onClick={handleTogglePrivate}
+          disabled={pending}
+          className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium ring-1 transition disabled:opacity-60 ${
+            item.isPrivate
+              ? "bg-ink-300/20 text-ink-500 ring-ink-300/40 hover:bg-ink-300/30"
+              : "bg-cream text-ink-500 ring-blush-100 hover:bg-blush-50"
+          }`}
+        >
+          {item.isPrivate ? (
+            <IconEye className="h-3.5 w-3.5" />
+          ) : (
+            <IconEyeOff className="h-3.5 w-3.5" />
+          )}
+          {item.isPrivate ? items.makePublicButton : items.makePrivateButton}
         </button>
         {!item.purchasedAt && item.reservation && (
           <button

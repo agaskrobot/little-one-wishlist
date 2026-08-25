@@ -198,6 +198,44 @@ export function IconExternal({ className }: IconProps) {
   );
 }
 
+export function IconEye({ className }: IconProps) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.75}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden
+    >
+      <path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7-10.5-7-10.5-7Z" />
+      <circle cx="12" cy="12" r="3" />
+    </svg>
+  );
+}
+
+export function IconEyeOff({ className }: IconProps) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.75}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden
+    >
+      <path d="M9.9 5.2A10.6 10.6 0 0 1 12 5c7 0 10.5 7 10.5 7a13.4 13.4 0 0 1-3 3.9" />
+      <path d="M6.4 6.4C3.4 8.3 1.5 12 1.5 12s3.5 7 10.5 7a10.2 10.2 0 0 0 4.6-1.1" />
+      <path d="M9.9 14.1a3 3 0 0 0 4.2-4.2" />
+      <path d="M2 2l20 20" />
+    </svg>
+  );
+}
+
 export function IconBabyBottle({ className }: IconProps) {
   return (
     <svg

@@ -191,8 +191,11 @@ const en: Dictionary = {
       reservedBy: "Reserved",
       notReserved: "Available",
       purchasedBadge: "Purchased",
+      privateBadge: "Only visible to you",
       markPurchasedButton: "Mark as purchased",
       undoPurchaseButton: "Undo purchase",
+      makePrivateButton: "Only visible to me",
+      makePublicButton: "Show on shared list",
       removeButton: "Remove",
       removeConfirmTitle: "Remove this item?",
       removeConfirmBody:
@@ -205,6 +208,7 @@ const en: Dictionary = {
         available: "Available ({count})",
         reserved: "Reserved ({count})",
         purchased: "Purchased ({count})",
+        private: "Only visible to you ({count})",
       },
     },
     editLinkWarning:

@@ -88,16 +88,20 @@ export default async function EditPage({
             (() => {
               const reversed = [...wishlist.items].reverse();
               const available = reversed.filter(
-                (item) => !item.reservation && !item.purchasedAt
+                (item) => !item.isPrivate && !item.reservation && !item.purchasedAt
               );
               const reserved = reversed.filter(
-                (item) => item.reservation && !item.purchasedAt
+                (item) => !item.isPrivate && item.reservation && !item.purchasedAt
               );
-              const purchased = reversed.filter((item) => item.purchasedAt);
+              const purchased = reversed.filter(
+                (item) => !item.isPrivate && item.purchasedAt
+              );
+              const privateItems = reversed.filter((item) => item.isPrivate);
               const sections = [
                 { key: "available", label: itemsDict.sections.available, items: available },
                 { key: "reserved", label: itemsDict.sections.reserved, items: reserved },
                 { key: "purchased", label: itemsDict.sections.purchased, items: purchased },
+                { key: "private", label: itemsDict.sections.private, items: privateItems },
               ] as const;
 
               return sections
