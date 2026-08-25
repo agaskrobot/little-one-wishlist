@@ -44,10 +44,11 @@ in-memory store.
 1. Connect the repo to Vercel.
 2. Add persistent storage:
    - Easiest: create a **Redis** database from the project's **Storage** tab
-     in the Vercel dashboard (powered by Upstash) and connect it — this
-     auto-injects `KV_REST_API_URL` / `KV_REST_API_TOKEN`, which the app
-     already supports.
+     in the Vercel dashboard and connect it — this auto-injects `REDIS_URL`,
+     which the app already supports.
    - Alternatively, set `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`
-     manually from your own Upstash database.
+     manually from your own Upstash database (REST API credentials, not the
+     `redis://` connection string) — preferred if available since it avoids
+     holding an open TCP connection per serverless instance.
 3. Deploy — without step 2 the app will still start, but data disappears on
    every serverless instance restart, so it's required before real use.

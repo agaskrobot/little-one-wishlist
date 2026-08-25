@@ -1,6 +1,6 @@
 import "server-only";
 
-const FETCH_TIMEOUT_MS = 5000;
+const FETCH_TIMEOUT_MS = 8000;
 const MAX_BYTES = 700_000;
 const MAX_TEXT_LENGTH = 200;
 

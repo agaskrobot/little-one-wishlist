@@ -6,6 +6,7 @@ import { getWishlistByShareToken } from "@/lib/wishlist";
 import { t } from "@/lib/i18n/dictionary-type";
 import { PublicItemRow } from "@/components/list/public-item-row";
 import { IconGift } from "@/components/icons";
+import { NotFoundCard } from "@/components/not-found-card";
 
 export const metadata: Metadata = {
   robots: { index: false, follow: false },
@@ -17,10 +18,9 @@ export default async function PublicListPage({
   const { lang, shareToken } = await params;
   if (!hasLocale(lang)) notFound();
 
-  const wishlist = await getWishlistByShareToken(shareToken);
-  if (!wishlist) notFound();
-
   const dict = await getDictionary(lang);
+  const wishlist = await getWishlistByShareToken(shareToken);
+  if (!wishlist) return <NotFoundCard dict={dict} locale={lang} />;
   const pathname = `/${lang}/list/${shareToken}`;
   const header = dict.list.header;
 

@@ -11,6 +11,7 @@ import { ShareDialog } from "@/components/edit/share-dialog";
 import { AddItemForm } from "@/components/edit/add-item-form";
 import { ItemRow } from "@/components/edit/item-row";
 import { IconGift } from "@/components/icons";
+import { NotFoundCard } from "@/components/not-found-card";
 
 export const metadata: Metadata = {
   robots: { index: false, follow: false },
@@ -22,10 +23,9 @@ export default async function EditPage({
   const { lang, editToken } = await params;
   if (!hasLocale(lang)) notFound();
 
-  const wishlist = await getWishlistByEditToken(editToken);
-  if (!wishlist) notFound();
-
   const dict = await getDictionary(lang);
+  const wishlist = await getWishlistByEditToken(editToken);
+  if (!wishlist) return <NotFoundCard dict={dict} locale={lang} />;
   const baseUrl = await getBaseUrl();
   const shareUrl = `${baseUrl}/${lang}/list/${wishlist.shareToken}`;
   const qrDataUrl = await QRCode.toDataURL(shareUrl, {

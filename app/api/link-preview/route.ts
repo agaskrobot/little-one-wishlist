@@ -3,6 +3,8 @@ import { fetchLinkPreview } from "@/lib/link-preview";
 import { getWishlistByEditToken } from "@/lib/wishlist";
 import { isValidUrl } from "@/lib/validation";
 
+export const maxDuration = 10;
+
 export async function GET(request: NextRequest) {
   const editToken = request.nextUrl.searchParams.get("editToken") ?? "";
   const url = request.nextUrl.searchParams.get("url") ?? "";
