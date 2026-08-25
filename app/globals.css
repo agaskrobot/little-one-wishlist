@@ -1,8 +1,37 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fef9f5;
+  --foreground: #4a2c39;
+
+  --color-cream: #fef9f5;
+  --color-blush-50: #fdf1f4;
+  --color-blush-100: #fbe3e9;
+  --color-blush-200: #f7c9d4;
+  --color-blush-300: #efa4b6;
+  --color-blush-400: #e8899d;
+  --color-blush-500: #d96e87;
+  --color-blush-600: #c25470;
+
+  --color-sage-50: #f2f6ef;
+  --color-sage-100: #e2ebda;
+  --color-sage-200: #c7d9b6;
+  --color-sage-300: #a6c191;
+  --color-sage-400: #8bab77;
+  --color-sage-500: #6f9260;
+
+  --color-peach-100: #fdecd7;
+  --color-peach-200: #fbd7ac;
+  --color-peach-300: #f7bd7d;
+
+  --color-ink-900: #3b2430;
+  --color-ink-700: #4a2c39;
+  --color-ink-500: #6b4a56;
+  --color-ink-400: #8c6a76;
+  --color-ink-300: #b39aa1;
+
+  --shadow-soft: 0 4px 24px rgba(199, 122, 143, 0.14);
+  --shadow-softer: 0 2px 12px rgba(199, 122, 143, 0.1);
 }
 
 @theme inline {
@@ -10,17 +39,112 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
+  --font-display: var(--font-quicksand);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-cream: var(--color-cream);
+  --color-blush-50: var(--color-blush-50);
+  --color-blush-100: var(--color-blush-100);
+  --color-blush-200: var(--color-blush-200);
+  --color-blush-300: var(--color-blush-300);
+  --color-blush-400: var(--color-blush-400);
+  --color-blush-500: var(--color-blush-500);
+  --color-blush-600: var(--color-blush-600);
+
+  --color-sage-50: var(--color-sage-50);
+  --color-sage-100: var(--color-sage-100);
+  --color-sage-200: var(--color-sage-200);
+  --color-sage-300: var(--color-sage-300);
+  --color-sage-400: var(--color-sage-400);
+  --color-sage-500: var(--color-sage-500);
+
+  --color-peach-100: var(--color-peach-100);
+  --color-peach-200: var(--color-peach-200);
+  --color-peach-300: var(--color-peach-300);
+
+  --color-ink-900: var(--color-ink-900);
+  --color-ink-700: var(--color-ink-700);
+  --color-ink-500: var(--color-ink-500);
+  --color-ink-400: var(--color-ink-400);
+  --color-ink-300: var(--color-ink-300);
+
+  --shadow-soft: var(--shadow-soft);
+  --shadow-softer: var(--shadow-softer);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+::selection {
+  background: var(--color-blush-200);
+  color: var(--color-ink-900);
+}
+
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-14px) rotate(3deg);
+  }
+}
+
+@keyframes pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.92) translateY(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 7s ease-in-out infinite;
+}
+
+.animate-pop-in {
+  animation: pop-in 0.25s ease-out;
+}
+
+@layer base {
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+
+  dialog::backdrop {
+    background: rgba(59, 36, 48, 0.45);
+    backdrop-filter: blur(2px);
+  }
+
+  dialog {
+    border: none;
+    padding: 0;
+    max-height: 90vh;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin: 0;
+    transform: translate(-50%, -50%);
+  }
+
+  @starting-style {
+    dialog[open] {
+      opacity: 0;
+      transform: translate(-50%, -46%);
+    }
+  }
+
+  dialog[open] {
+    opacity: 1;
+    transition:
+      opacity 0.18s ease-out,
+      transform 0.18s ease-out,
+      overlay 0.18s ease-out allow-discrete,
+      display 0.18s ease-out allow-discrete;
+  }
 }
