@@ -165,6 +165,16 @@ function extractJsonLdPrice(html: string): { price: string; currency: string | n
   return null;
 }
 
+function extractAmazonImage(html: string): string | null {
+  const oldHires = html.match(/data-old-hires="([^"]+)"/);
+  if (oldHires?.[1]) return oldHires[1];
+
+  const hiRes = html.match(/"hiRes":"([^"]+)"/);
+  if (hiRes?.[1]) return hiRes[1];
+
+  return null;
+}
+
 function extractPrice(html: string): string | null {
   const jsonLd = extractJsonLdPrice(html);
   if (jsonLd) return formatPrice(jsonLd.price, jsonLd.currency);
@@ -224,7 +234,8 @@ export async function fetchLinkPreview(rawUrl: string): Promise<LinkPreview> {
   const rawImage =
     extractMeta(html, "og:image") ??
     extractMeta(html, "og:image:url") ??
-    extractMeta(html, "twitter:image");
+    extractMeta(html, "twitter:image") ??
+    extractAmazonImage(html);
   const image = rawImage ? resolveUrl(rawImage, finalUrl) : null;
 
   const price = extractPrice(html);
